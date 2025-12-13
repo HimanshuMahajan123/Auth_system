@@ -45,7 +45,7 @@ const userSchema = new Schema(
 // Hash password before saving the user model(pre-save hook of mongoose)
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
-    return next();
+    return; //when async is in use there is no need to manually write next() at all
   }
 
   this.password = await bcrypt.hash(this.password, 10);

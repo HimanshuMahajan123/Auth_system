@@ -2,10 +2,8 @@ import { User } from "../models/user.models.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/api-error.js";
 import { ApiResponse } from "../utils/api-response.js";
-import jwt from "jsonwebtoken";
-import { trusted } from "mongoose";
 
-const generateAcessAndRefreshToken = async (userId) => {
+const generateAccessAndRefreshToken = async (userId) => {
   try {
     const user = await User.findById(userId);
     const accessToken = user.generateAccessToken();
@@ -15,7 +13,7 @@ const generateAcessAndRefreshToken = async (userId) => {
     await user.save({ validateBeforeSave: false });
     return { accessToken, refreshToken };
   } catch (error) {
-    throw new ApiError(500, "Error generating tokens");
+    throw new ApiError(500, "Error generating access and refresh tokens");
   }
 };
 
@@ -71,7 +69,7 @@ const loginUser = asyncHandler(async (req, res) => {
     "-password -refreshToken"
   );
 
-  const { accessToken, refreshToken } = await generateAcessAndRefreshToken(
+  const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
     user._id
   );
 
@@ -83,7 +81,7 @@ const loginUser = asyncHandler(async (req, res) => {
   res
     .status(200)
     .cookie("refreshToken", refreshToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken", accessToken, options)
     .json(
       new ApiResponse(
         200,
@@ -96,3 +94,5 @@ const loginUser = asyncHandler(async (req, res) => {
       )
     );
 });
+
+export { registerUser, loginUser };
