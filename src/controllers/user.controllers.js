@@ -2,6 +2,8 @@ import { User } from "../models/user.models.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/api-error.js";
 import { ApiResponse } from "../utils/api-response.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import fs from "fs";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -20,8 +22,8 @@ const generateAccessAndRefreshToken = async (userId) => {
 // User Registration
 const registerUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
+  const avatar = req.file;
 
-  //check if user already exists
   const existingUser = await User.findOne({
     $or: [{ email }, { username }],
   });
@@ -38,6 +40,21 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (!createdUser) {
     throw new ApiError(500, "Something went wrong while creating user");
+  }
+
+  //check if the user has uploaded a picture , then upload it on the cloudinary
+  if (avatar) {
+    console.log("Uploaded avatar information : ", avatar);
+    const localFilePath = avatar.path;
+    const cloudinaryUrl = await uploadOnCloudinary(localFilePath);
+
+    if (!cloudinaryUrl) {
+      throw new ApiError(500, "Avatar upload to Cloudinary failed");
+    }
+
+    createdUser.avatar.url = cloudinaryUrl;
+    createdUser.save({ validateBeforeSave: false }); // always save the object it is altered
+    fs.unlinkSync(localFilePath); //remove the locally saved temporary file after successful upload to Cloudinary
   }
 
   res

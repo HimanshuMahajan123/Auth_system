@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.routes.js";
+import upload from "./middlewares/multer.js";
 
 const app = express();
 
@@ -20,6 +21,6 @@ app.use(
   })
 );
 
-app.use("/api/auth", authRouter);
+app.use("/api/auth", upload.single("avatar"), authRouter);
 
 export default app;
