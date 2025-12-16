@@ -194,6 +194,17 @@ const getUsers = asyncHandler(async (req, res) => {
   const page = parseInt(req.query?.page) || 1;
   const limit = parseInt(req.query?.limit) || 10;
 
+  if (page < 1 || limit < 1 || limit > 100) {
+    throw new ApiError(400, "Invalid pagination values");
+  }
+
+  const totalDocs = await User.countDocuments();
+  const totalPages = Math.ceil(totalDocs / limit);
+
+  console.log(
+    `Total pages are ${totalPages} and you are fetching page ${page}`
+  );
+
   const skip = (page - 1) * limit;
   const users = await User.find()
     .skip(skip)
