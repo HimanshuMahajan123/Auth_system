@@ -189,4 +189,24 @@ const refershAccessToken = asyncHandler(async (req, res) => {
   }
 });
 
-export { registerUser, loginUser, logoutUser, refershAccessToken };
+//get users from the database(pagination applied)
+const getUsers = asyncHandler(async (req, res) => {
+  const page = parseInt(req.query?.page) || 1;
+  const limit = parseInt(req.query?.limit) || 10;
+
+  const skip = (page - 1) * limit;
+  const users = await User.find()
+    .skip(skip)
+    .limit(limit)
+    .select("-_id -refreshToken -password -avatar -createdAt -updatedAt");
+
+  res.status(200).json(
+    new ApiResponse({
+      status: 200,
+      users: users,
+      message: "users fetched successfully",
+    })
+  );
+});
+
+export { registerUser, loginUser, logoutUser, refershAccessToken, getUsers };

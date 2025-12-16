@@ -3,6 +3,7 @@ import {
   registerUser,
   loginUser,
   logoutUser,
+  getUsers,
 } from "../controllers/user.controllers.js";
 import { validate } from "../middlewares/validator.middleware.js";
 import {
@@ -24,7 +25,8 @@ router.post(
 );
 router.post("/login", userLoginValidator(), validate, loginUser);
 
-//secured routes
+//secured routes(that requires a client to provide proof of identity and/or permission before being allowed to access the requested resource.)
 router.post("/logout", verifyJWT, logoutUser);
+router.get("/users", verifyJWT, getUsers);
 
 export default router;
