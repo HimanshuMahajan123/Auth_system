@@ -17,11 +17,11 @@ export const validate = (req, res, next) => {
       [err.path]: err.msg,
     });
   });
-
-  //   if (req.file) {
-  //     const localFilePath = req.file.path;
-  //     fs.unlinkSync(localFilePath);
-  //   }
+  //If there is any file uploaded( like avatar ) , remove the temporarily saved file
+  if (req.file) {
+    const localFilePath = req.file.path;
+    fs.unlinkSync(localFilePath);
+  }
 
   console.log("Validation errors : ", extractedErrors);
   throw new ApiError(422, "Validation Error", extractedErrors);

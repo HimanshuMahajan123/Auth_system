@@ -1,4 +1,4 @@
-import multer, { diskStorage } from "multer";
+import multer from "multer";
 import { nanoid } from "nanoid";
 
 /*

@@ -45,7 +45,6 @@ const registerUser = asyncHandler(async (req, res) => {
 
   //check if the user has uploaded a picture , then upload it on the cloudinary
   if (avatar) {
-    console.log("Uploaded avatar information : ", avatar);
     const localFilePath = avatar.path;
     const cloudinaryUrl = await uploadOnCloudinary(localFilePath);
 
