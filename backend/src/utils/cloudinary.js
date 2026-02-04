@@ -9,8 +9,6 @@ cloudinary.config({
 
 const uploadOnCloudinary = async (localFilePath) => {
   try {
-    console.log("uploading on cloudinary >> ", localFilePath);
-
     if (!localFilePath) return;
 
     //upload user image on cloudinary using uploader
@@ -23,7 +21,7 @@ const uploadOnCloudinary = async (localFilePath) => {
     if (response) {
       console.log(
         "avatar is successfully uploaded on cloudinary",
-        response.secure_url
+        response.secure_url,
       );
     }
     return response?.secure_url;

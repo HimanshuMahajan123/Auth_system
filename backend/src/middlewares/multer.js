@@ -1,5 +1,7 @@
 import multer from "multer";
 import { nanoid } from "nanoid";
+import path from "path";
+import { fileURLToPath } from "url";
 
 /*
   IMPORTANT KNOWLEDGE (MULTER):
@@ -11,14 +13,21 @@ import { nanoid } from "nanoid";
 
 */
 
+// recreate __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// go from src/middlewares -> backend/public/temp
+const uploadPath = path.join(__dirname, "../../public/temp");
+
 //diskStorage tells Multer to store the file on disk (your server) temporarily.
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./public/temp");
+    cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = nanoid(6);
-    cb(null, file.fieldname + "-" + uniqueSuffix); //Prevents overwriting files with the same name.
+    cb(null, `${file.fieldname}-${uniqueSuffix}`); //Prevents overwriting files with the same name.
   },
 });
 

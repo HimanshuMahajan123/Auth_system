@@ -36,7 +36,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const user = await User.create({ username, email, password });
 
   const createdUser = await User.findById(user._id).select(
-    "-password -refreshToken"
+    "-password -refreshToken",
   );
 
   if (!createdUser) {
@@ -60,7 +60,7 @@ const registerUser = asyncHandler(async (req, res) => {
   res
     .status(201)
     .json(
-      new ApiResponse(201, { createdUser }, "User registered successfully")
+      new ApiResponse(201, { createdUser }, "User registered successfully"),
     );
 });
 
@@ -85,11 +85,11 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   const loggedInUser = await User.findById(user._id).select(
-    "-password -refreshToken"
+    "-password -refreshToken",
   );
 
   const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
-    user._id
+    user._id,
   );
 
   const options = {
@@ -109,8 +109,8 @@ const loginUser = asyncHandler(async (req, res) => {
           accessToken: accessToken,
           refreshToken: refreshToken,
         },
-        "User logged in successfully"
-      )
+        "User logged in successfully",
+      ),
     );
 });
 
@@ -125,7 +125,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     },
     {
       new: true,
-    }
+    },
   );
 
   const options = {
@@ -152,7 +152,7 @@ const refershAccessToken = asyncHandler(async (req, res) => {
   try {
     const decodedToken = jwt.verify(
       incomingRefreshToken,
-      process.env.REFRESH_TOKEN_SECRET
+      process.env.REFRESH_TOKEN_SECRET,
     );
     const user = await User.findById(decodedToken?._id);
     if (!user) {
@@ -182,8 +182,8 @@ const refershAccessToken = asyncHandler(async (req, res) => {
         new ApiResponse(
           200,
           { accessToken, refreshToken: newRefreshToken },
-          "Access token refreshed successfully"
-        )
+          "Access token refreshed successfully",
+        ),
       );
   } catch (error) {
     throw new ApiError(401, "Invalid or expired refresh token");
@@ -203,7 +203,7 @@ const getUsers = asyncHandler(async (req, res) => {
   const totalPages = Math.ceil(totalDocs / limit);
 
   console.log(
-    `Total pages are ${totalPages} and you are fetching page ${page}`
+    `Total pages are ${totalPages} and you are fetching page ${page}`,
   );
 
   const skip = (page - 1) * limit;
@@ -217,7 +217,7 @@ const getUsers = asyncHandler(async (req, res) => {
       status: 200,
       users: users,
       message: "users fetched successfully",
-    })
+    }),
   );
 });
 
