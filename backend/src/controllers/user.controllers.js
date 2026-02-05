@@ -30,6 +30,10 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (existingUser) {
+    if (avatar) {
+      const localFilePath = avatar.path;
+      fs.unlinkSync(localFilePath);
+    }
     throw new ApiError(409, "User with given email or username already exists");
   }
 
@@ -212,13 +216,27 @@ const getUsers = asyncHandler(async (req, res) => {
     .limit(limit)
     .select("-_id -refreshToken -password -avatar -createdAt -updatedAt");
 
-  res.status(200).json(
-    new ApiResponse({
-      status: 200,
-      users: users,
-      message: "users fetched successfully",
-    }),
-  );
+  console.log(`Fetched ${users.length} users from the database`);
+  console.log(users);
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, { users: users }, "Users fetched successfully"));
 });
 
-export { registerUser, loginUser, logoutUser, refershAccessToken, getUsers };
+const getMe = asyncHandler(async (req, res) => {
+  const user = req.user;
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, { user }, "User fetched successfully"));
+});
+
+export {
+  registerUser,
+  loginUser,
+  logoutUser,
+  refershAccessToken,
+  getUsers,
+  getMe,
+};
