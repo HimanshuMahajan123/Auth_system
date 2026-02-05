@@ -151,7 +151,7 @@ const UsersPage = () => {
                   className="bg-linear-to-br from-gray-50 to-white rounded-lg p-3 md:p-4 border border-gray-200 hover:shadow-md hover:border-blue-300 transition-all duration-200"
                 >
                   <div className="flex items-center space-x-2 md:space-x-3 min-w-0">
-                    <div className="w-10 h-10 md:w-12 md:h-12 bg-linear-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-sm md:text-lg flex-shrink-0">
+                    <div className="w-10 h-10 md:w-12 md:h-12 bg-linear-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-sm md:text-lg shrink-0">
                       {user.username?.charAt(0).toUpperCase() || "U"}
                     </div>
                     <div className="flex-1 min-w-0">
